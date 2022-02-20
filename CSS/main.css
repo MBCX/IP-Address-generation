@@ -1,0 +1,15 @@
+@media only screen and (prefers-color-scheme: dark)
+{
+    html
+    {
+        background-color: #000000;
+        color: white;
+    }
+
+    input,
+    button
+    {
+        background-color: #424242;
+        color: white;
+    }
+}
