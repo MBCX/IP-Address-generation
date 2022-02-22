@@ -12,6 +12,16 @@ export const IP_COUNTRY_AND_CITY = {
     }
 }
 
+export const COUNTRY = {
+    US: 0,
+    NONE: -1,
+};
+
+export const CITY = {
+    
+    NONE: -1,
+};
+
 export function randomNumberBetween(min, max) {
     let result = 0;
     if (min == max || max == min) return min;
@@ -80,7 +90,7 @@ export function generateIP(ip_range, shuffle = false) {
 }
 
 
-export function getRandomIPBasedOn(country, city = IP_COUNTRY_AND_CITY.CITY.NONE) {
+export function getRandomIPBasedOnCountry(country, city = IP_COUNTRY_AND_CITY.CITY.NONE) {
     switch (country) {
         case IP_COUNTRY_AND_CITY.COUNTRY.US:
 

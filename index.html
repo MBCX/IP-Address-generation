@@ -11,14 +11,18 @@
         <script src="JS/main.js" type="module"></script>
     </head>
     <body>
-        <input type="text" placeholder="Define range." data-ip-range-specifier-el>
+        <input type="text" placeholder="Define range using | or - as seperators." value="0.0.0.0-255.255.255.255"data-ip-range-specifier-el>
         <button data-generate-ip-btn-el>Generate IP.</button>
         <pre data-ip-result-el>0.0.0.0</pre>
 
         <label for="country picker">Pick a country</label>
-        <select name="country picker">
+        <select name="country picker" data-country-picker>
             <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Australia">Australia</option>
         </select>
-        <div>Generate IP for <strong>United States</strong></div>
+        <div>Generate IP for <strong data-country-index>United States</strong></div>
+        <button data-generate-ip-country-btn-el>Generate Country IP.</button>
+        <pre data-ip-country-result>0.0.0.0</pre>
     </body>
 </html>
