@@ -1,4 +1,4 @@
-import { generateIP, getRandomIPBasedOnCountry, IP_COUNTRY_AND_CITY } from "./utils.js"
+import { generateIP, getRandomIPBasedOnCountry, COUNTRY, STATE } from "./utils.js"
 
 document.addEventListener("DOMContentLoaded", function () {
     const btn = document.querySelector("[data-generate-ip-btn-el]");
@@ -16,7 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     region_generate_btn.addEventListener("click", () => {
-        const ip = getRandomIPBasedOnCountry()
+        const ip = getRandomIPBasedOnCountry(COUNTRY.US, STATE.US.NEW_YORK).then(() => {
+            region_generate_btn.setAttribute("disabled", true);
+        }).then((val) => {
+            ip_country_result.innerText = val;
+        });
     });
 
     region_select.addEventListener("mouseup", () => {
