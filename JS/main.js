@@ -1,4 +1,4 @@
-import { generateIP, getRandomIPBasedOnCountry, COUNTRY, STATE } from "./utils.js"
+import { generateRandomIPBasedOnCountry, generateRandomIP } from "./ipAPI.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const btn = document.querySelector("[data-generate-ip-btn-el]");
@@ -10,16 +10,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const region_generate_btn = document.querySelector("[data-generate-ip-country-btn-el]");
 
     btn.addEventListener("click", () => {
-        const ip = generateIP(range_specifier.value);
+        const ip = generateRandomIP(range_specifier.value);
 
-        ip_result.innerText = ip.join(".");
+        ip_result.innerText = ip;
     });
 
     region_generate_btn.addEventListener("click", () => {
-        const ip = getRandomIPBasedOnCountry(COUNTRY.US, STATE.US.NEW_YORK).then(() => {
-            region_generate_btn.setAttribute("disabled", true);
-        }).then((val) => {
-            ip_country_result.innerText = val;
+        const ip_result = generateRandomIPBasedOnCountry(
+            region_index.innerText,
+            10
+        );
+
+        region_generate_btn.setAttribute("disabled", true);
+        ip_country_result.innerText = "Generating...";
+
+        ip_result.then((res) => {
+            region_generate_btn.removeAttribute("disabled");
+            ip_country_result.innerText = res;
         });
     });
 
