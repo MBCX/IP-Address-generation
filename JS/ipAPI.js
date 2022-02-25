@@ -1,8 +1,8 @@
-import { COUNTRY, STATE, randomNumberBetween } from "./utils.js";
+import { randomNumberBetween } from "./utils.js";
 
 /**
- * A function that generates a fake IP address.
- * @param {Array | String} ip_range Must be at least 2 range, using | or - as a seperator.
+ * A function that generates a random IP address.
+ * @param {Array | String} ip_range Must have at least 2 IP ranges, using | or - as a seperator.
  * @param {Boolean} shuffle Set to true for more randomness.
  */
 export function generateRandomIP(ip_range, shuffle = false) {
@@ -19,6 +19,7 @@ export function generateRandomIP(ip_range, shuffle = false) {
         }
 
         ip_range.forEach((individual_ip) => {
+
             if (individual_ip.includes(".")) {
                 splitted_ip.push(individual_ip.split("."));
             }
@@ -32,14 +33,18 @@ export function generateRandomIP(ip_range, shuffle = false) {
             ++i
         ) {
             for (let j = 0; ip_range[i].length > j; ++j) {
-                // Determine if this individual IP is beyond 255.
+                // Determine if this individual IP is beyond 255
+                // and silently set it to 255.
                 if (255 < ip_range[i][j]) {
                     ip_range[i][j] = 255;
                 } else if (255 < ip_range[i + 1][j]) {
                     ip_range[i + 1][j] = 255;
                 }
 
-                // Generate individual IPs based on range.
+                // Take the IP from our current index
+                // + 1, and use that as the maximum
+                // value to generate each individual IP.
+                // Otherwise, randomise the number itself.
                 if (undefined != ip_range[i + 1][j]) {
                     ip_num = randomNumberBetween(
                         parseInt(ip_range[i][j]),
@@ -54,6 +59,10 @@ export function generateRandomIP(ip_range, shuffle = false) {
                 new_ip.push(ip_num);
             }
         }
+        
+        if (shuffle) {
+            new_ip.shuffle();
+        }
         return new_ip.join(".");
     } else {
         console.error(
@@ -63,10 +72,10 @@ export function generateRandomIP(ip_range, shuffle = false) {
     }
 }
 
-export async function generateRandomIPBasedOnCountry(country, max_attemps, state = STATE.NONE) {
+export async function generateRandomIPBasedOnCountry(country, max_attemps) {
     let current_ip = generateRandomIP("0.0.0.0 - 255.255.255.255");
 
-    async function requestIPFromServer(with_ip) {
+    async function requestIPFromExternalAPI(with_ip) {
         try {
             const res = await window.fetch(`https://ipapi.co/${with_ip}/json/`);
             return await res.json();
@@ -79,7 +88,7 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps, state
         try {
             let result_ip;
             for (let i = 0; attemps > i; ++i) {
-                result_ip = await requestIPFromServer(current_ip).then((res) => {
+                result_ip = await requestIPFromExternalAPI(current_ip).then((res) => {
                     console.log(`Current IP: ${current_ip}`);
 
                     if (res.error) {
@@ -101,13 +110,13 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps, state
                 // the specified country were found.
                 if (undefined != result_ip) break;
             }
-            
+
             if (undefined == result_ip) {
                 throw new Error(`No IP were found for the country: ${target_country} in ${attemps} attemps.`);
             }
             return result_ip;
         } catch (err) {
-            console.error(err);
+            return console.error(err);
         }
     }
 
