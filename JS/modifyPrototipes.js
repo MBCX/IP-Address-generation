@@ -1,6 +1,8 @@
-// Adds a shuffle global prototype to the Array
-// object.
 if (undefined == Array.prototype.shuffle) {
+    /**
+     * Shuffles the contents of a given
+     * array.
+     */
     Array.prototype.shuffle = function () {
         let e;
         let t;
