@@ -11,9 +11,11 @@
         <script src="JS/main.js" type="module"></script>
     </head>
     <body>
+        <h1>IP api</h1>
         <input type="text" placeholder="Define range using | or - as seperators." value="0.0.0.0-255.255.255.255"data-ip-range-specifier-el>
         <button data-generate-ip-btn-el>Generate IP.</button>
         <pre data-ip-result-el>0.0.0.0</pre>
+        <pre data-ip-result-el-ipv6>0:0:0:0:0:0:0:0</pre>
 
         <label for="country picker">Pick a country</label>
         <select name="country picker" data-country-picker>

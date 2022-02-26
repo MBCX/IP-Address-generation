@@ -1,4 +1,4 @@
-import { generateRandomIPBasedOnCountry, generateRandomIP } from "./ipAPI.js";
+import { generateRandomIPBasedOnCountry, generateRandomIP, convertToIPv6 } from "./ipAPI.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const btn = document.querySelector("[data-generate-ip-btn-el]");
@@ -9,10 +9,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const region_index = document.querySelector("[data-country-index]");
     const region_generate_btn = document.querySelector("[data-generate-ip-country-btn-el]");
 
+    // IPv6.
+    const ip_result_ipv6 = document.querySelector("[data-ip-result-el-ipv6]");
+
     btn.addEventListener("click", () => {
         const ip = generateRandomIP(range_specifier.value);
 
         ip_result.innerText = ip;
+        ip_result_ipv6.innerText = convertToIPv6(ip);
     });
 
     region_generate_btn.addEventListener("click", () => {
