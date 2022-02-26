@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // IPv6.
     const ip_result_ipv6 = document.querySelector("[data-ip-result-el-ipv6]");
+    const ip_result_ipv6_country = document.querySelector("[data-ip-country-result-ipv6]");
 
     btn.addEventListener("click", () => {
         const ip = generateRandomIP(range_specifier.value);
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ip_result.then((res) => {
             region_generate_btn.removeAttribute("disabled");
             ip_country_result.innerText = res;
+            ip_result_ipv6_country.innerText = convertToIPv6(res);
         });
     });
 
