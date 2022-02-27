@@ -1,26 +1,24 @@
-import { randomNumberBetween, convertFromDecimalToHex, convertFromHexToDecimal } from "./utils.js";
+import {
+    randomNumberBetween,
+    convertFromDecimalToHex,
+    convertFromHexToDecimal,
+} from "./utils.js";
 
 /**
- * Splits an IP range into an array. The IPs must be splitted
+ * Splits a given IP range into an array. The IPs must be splitted
  * either by a | or a - character. Returns -1 otherwhise.
  * @param {String} ip IP range.
  * @returns An array from the splitted IP range.
  */
 export function convertIPRangeToArray(ip) {
     const final_ip_array = new Array();
-    if (ip.includes("|") || ip.includes("-")) {
-        if (ip.includes("|")) {
-            ip = ip.split("|");
-        } else if (ip.includes("-")) {
-            ip = ip.split("-");
-        }
-
+    if ((ip = splitIPv4RangeToArray(ip))) {
         // With the now split IP ranges, split
         // each individual IP to a individual array.
         ip.forEach((individual_ip) => {
-            if (individual_ip.includes(".")) {
-                final_ip_array.push(splitIPv4dots(individual_ip));
-            }
+            // Assume each valid IPv4 address
+            // contains a '.'
+            final_ip_array.push(splitIPv4dots(individual_ip));
         });
         return final_ip_array;
     } else {
@@ -29,52 +27,61 @@ export function convertIPRangeToArray(ip) {
     }
 }
 
-export function splitIPv4dots(ip) {
+/**
+ * Splits the . found in an valid IPv4 address.
+ * @param {String} ip
+ */
+function splitIPv4dots(ip) {
     return ip.split(".");
+}
+
+/**
+ * Splits the given IPv4 range into an array.
+ * The range must have a | or - as separators.
+ * @param {String} ipv4_range
+ */
+function splitIPv4RangeToArray(ipv4_range) {
+    if (ipv4_range.includes("|")) {
+        return (ipv4_range = ipv4_range.split("|"));
+    } else if (ipv4_range.includes("-")) {
+        return (ipv4_range = ipv4_range.split("-"));
+    }
+    return false;
 }
 
 /**
  * Util to convert IPv4 to IPv6.
  * @param {(String | Number[])} ipv4 The IPv4 address.
  */
-export function convertToIPv6(ipv4)
-{
+export function convertToIPv6(ipv4) {
     const ipv6_prefix = "0:0:0:0:0:ffff:";
     let ipv6_result = ipv6_prefix;
 
     // Check if we have to deal with multiple IPv4s.
-    if (
-        Array.isArray(ipv4) ||
-        ipv4.includes("|") ||
-        ipv4.includes("-")
-    ) {
-        if (ipv4.includes("|")) {
-            ipv4 = ipv4.split("|");
-        } else if (ipv4.includes("-")) {
-            ipv4 = ipv4.split("-");
-        }
+    if (Array.isArray(ipv4) || ipv4.includes("|") || ipv4.includes("-")) {
+        ipv4 = splitIPv4RangeToArray(ipv4);
         const result_ips = new Array();
         const current_hex_ip = new Array();
 
         ipv4.forEach((ip) => {
             const ip_splitted = splitIPv4dots(ip);
-            
+
             // Resets hex conversions for the next ip.
             current_hex_ip.length = 0;
             ip_splitted.forEach((ip_number, i) => {
-                if ((i % 3) === 2) {
+                if (2 === i % 3) {
                     current_hex_ip[current_hex_ip.length - 1] += ":";
                 }
                 current_hex_ip.push(convertFromDecimalToHex(ip_number));
             });
-            
+
             result_ips.push(ipv6_prefix + current_hex_ip.join(""));
         });
         return result_ips;
     } else {
         const ip_splitted = splitIPv4dots(ipv4);
         ip_splitted.forEach((ip, i) => {
-            if (2 === i) {
+            if (2 === i % 3) {
                 ipv6_result += ":";
             }
             ipv6_result += convertFromDecimalToHex(ip);
@@ -87,8 +94,7 @@ export function convertToIPv6(ipv4)
  * Util to convert to IPv6 to IPv4.
  * @param {String} ipv6 The IPv6 address.
  */
-export function convertToIPv4(ipv6)
-{
+export function convertToIPv4(ipv6) {
     const result = new Array();
     if (ipv6.includes(":")) {
         ipv6 = ipv6.split(":");
@@ -96,7 +102,7 @@ export function convertToIPv4(ipv6)
         // Indexes 6 and 7 should always
         // have the actual valid IP.
         let ip_hexadecimal = `${ipv6[6]}:${ipv6[7]}`;
-        
+
         // We split it twice to be able to separate
         // into an array each hexadecimal digit.
         ip_hexadecimal = ip_hexadecimal.split(":");
@@ -220,15 +226,12 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps) {
 
                 // Break out of the loop if IPs for
                 // the specified country were found.
-                if (undefined != result_ip) break;
+                if (undefined != result_ip) return result_ip;
             }
 
-            if (undefined == result_ip) {
-                throw new Error(
-                    `No IP were found for the country: ${target_country} at ${attemps} attemps.`
-                );
-            }
-            return result_ip;
+            throw new Error(
+                `No IP were found for the country: ${target_country} at ${attemps} attemps.`
+            );
         } catch (err) {
             return (
                 `No IP were found for the country: ${target_country}` &&

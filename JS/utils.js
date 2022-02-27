@@ -1,25 +1,25 @@
-export const COUNTRY = {
-    US: "United States",
-    GB: "United Kigndom",
-    NONE: -1,
-};
+// export const COUNTRY = {
+//     US: "United States",
+//     GB: "United Kigndom",
+//     NONE: -1,
+// };
 
-export const STATE = {
-    US: {
-        NEW_YORK: "New York",
-        NEW_JERSEY: "New Jersey",
-    },
-    GB: {
-        ENGLAND: "England",
-    },
-    NONE: -1,
-};
+// export const STATE = {
+//     US: {
+//         NEW_YORK: "New York",
+//         NEW_JERSEY: "New Jersey",
+//     },
+//     GB: {
+//         ENGLAND: "England",
+//     },
+//     NONE: -1,
+// };
 
 export function randomNumberBetween(min, max) {
     if (min === max || max === min) return min;
     if (min > max) {
-        // Trick to swap 2 values without
-        // using an intermediate variable.
+        // Trick to swap values between 2 variables
+        // without using an intermediate variable.
         min = min ^ max ^ (max = min);
     }
     return Math.floor(Math.random() * (max - min) + min);
@@ -27,12 +27,18 @@ export function randomNumberBetween(min, max) {
 
 function getHexAlphabetValue(hex_alphabet) {
     switch (hex_alphabet) {
-        case "a": return 10;
-        case "b": return 11;
-        case "c": return 12;
-        case "d": return 13;
-        case "e": return 14;
-        case "f": return 15;
+        case "a":
+            return 10;
+        case "b":
+            return 11;
+        case "c":
+            return 12;
+        case "d":
+            return 13;
+        case "e":
+            return 14;
+        case "f":
+            return 15;
     }
 }
 
@@ -47,7 +53,7 @@ export function convertFromHexToDecimal(hex) {
     let result = 0;
 
     for (let i = 0; hex_length > i; i++) {
-        let number;
+        let number = 0;
         if (/[a-f]/i.test(hex_array[i])) {
             number = getHexAlphabetValue(hex_array[i]);
         } else {
@@ -75,8 +81,6 @@ export function convertFromDecimalToHex(number) {
         f: "f",
     };
 
-    // Just change the numbers for anything
-    // less than 15.
     if (15 >= number) {
         // This prefix eliminates the issue
         // of hex numbers being combined.
@@ -96,7 +100,7 @@ export function convertFromDecimalToHex(number) {
                     return prefix + hexadecimal_alphabet.e;
                 case 15:
                     return prefix + hexadecimal_alphabet.f;
-            }       
+            }
         }
         return prefix + number;
     } else {
