@@ -1,7 +1,7 @@
-import { randomNumberBetween, convertToHex } from "./utils.js";
+import { randomNumberBetween, convertFromDecimalToHex, convertFromHexToDecimal } from "./utils.js";
 
 /**
- * Splits the IP range into an array. The IPs must be splitted
+ * Splits an IP range into an array. The IPs must be splitted
  * either by a | or a - character. Returns -1 otherwhise.
  * @param {String} ip IP range.
  * @returns An array from the splitted IP range.
@@ -33,37 +33,95 @@ export function splitIPv4dots(ip) {
     return ip.split(".");
 }
 
+/**
+ * Util to convert IPv4 to IPv6.
+ * @param {(String | Number[])} ipv4 The IPv4 address.
+ */
 export function convertToIPv6(ipv4)
 {
     const ipv6_prefix = "0:0:0:0:0:ffff:";
     let ipv6_result = ipv6_prefix;
 
     // Check if we have to deal with multiple IPv4s.
-    if (Array.isArray(ipv4)) {
+    if (
+        Array.isArray(ipv4) ||
+        ipv4.includes("|") ||
+        ipv4.includes("-")
+    ) {
+        if (ipv4.includes("|")) {
+            ipv4 = ipv4.split("|");
+        } else if (ipv4.includes("-")) {
+            ipv4 = ipv4.split("-");
+        }
+        const result_ips = new Array();
+        const current_hex_ip = new Array();
 
+        ipv4.forEach((ip) => {
+            const ip_splitted = splitIPv4dots(ip);
+            
+            // Resets hex conversions for the next ip.
+            current_hex_ip.length = 0;
+            ip_splitted.forEach((ip_number, i) => {
+                if ((i % 3) === 2) {
+                    current_hex_ip[current_hex_ip.length - 1] += ":";
+                }
+                current_hex_ip.push(convertFromDecimalToHex(ip_number));
+            });
+            
+            result_ips.push(ipv6_prefix + current_hex_ip.join(""));
+        });
+        return result_ips;
     } else {
-        const ipv4_array = splitIPv4dots(ipv4);
-
-        ipv4_array.forEach((ip, i) => {
-            if (2 == i) {
+        const ip_splitted = splitIPv4dots(ipv4);
+        ip_splitted.forEach((ip, i) => {
+            if (2 === i) {
                 ipv6_result += ":";
             }
-            ipv6_result += convertToHex(ip);
-
+            ipv6_result += convertFromDecimalToHex(ip);
         });
+        return ipv6_result;
     }
-    return ipv6_result;
 }
 
+/**
+ * Util to convert to IPv6 to IPv4.
+ * @param {String} ipv6 The IPv6 address.
+ */
 export function convertToIPv4(ipv6)
 {
+    const result = new Array();
+    if (ipv6.includes(":")) {
+        ipv6 = ipv6.split(":");
 
+        // Indexes 6 and 7 should always
+        // have the actual valid IP.
+        let ip_hexadecimal = `${ipv6[6]}:${ipv6[7]}`;
+        
+        // We split it twice to be able to separate
+        // into an array each hexadecimal digit.
+        ip_hexadecimal = ip_hexadecimal.split(":");
+        ip_hexadecimal.forEach((hex) => {
+            let combined_hex = new Array();
+            let target_hex = "";
+            hex = hex.split("");
+            combined_hex = hex;
+
+            for (let i = 0; combined_hex.length > i; i += 2) {
+                target_hex = combined_hex[i] + combined_hex[i + 1];
+                result.push(convertFromHexToDecimal(target_hex));
+            }
+        });
+        return result.join(".");
+    } else {
+        console.error(`The following IP ${ipv6} is not a valid IPv6.`);
+        return -1;
+    }
 }
 
 /**
  * Generates a random IPv4 address.
  * @param {Array | String} ip_range Must have at least 2 IP ranges, using | or - as a seperator.
- * @param {Boolean} shuffle Set to true for increased randomness.
+ * @param {Boolean} [shuffle] Set to true for increased randomness.
  */
 export function generateRandomIP(ip_range, shuffle = false) {
     // Use the pipe (|) or dash (-) as a special symbols to
@@ -111,10 +169,10 @@ export function generateRandomIP(ip_range, shuffle = false) {
 
 /**
  * Generates a random IPv4 address but the address generated
- * always* falls in the specified country.
+ * almost always falls in the specified country.
  * @param {String} country
  * @param {Number} max_attemps Maximum retry attemps before failing.
- * @returns A random IPv4 address that's always located in the asked country.
+ * @returns A random IPv4 address that's almost always located in the asked country.
  */
 export async function generateRandomIPBasedOnCountry(country, max_attemps) {
     let current_ip = generateRandomIP("0.0.0.0 - 255.255.255.255");
@@ -144,8 +202,7 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps) {
                                 "0.0.0.0 - 255.255.255.255"
                             );
                             return;
-                        }
-                        if (res.country_name === target_country) {
+                        } else if (res.country_name === target_country) {
                             current_ip = generateRandomIP(
                                 `${res.ip} - ${current_ip}`
                             );

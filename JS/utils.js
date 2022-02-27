@@ -17,24 +17,53 @@ export const STATE = {
 
 export function randomNumberBetween(min, max) {
     if (min === max || max === min) return min;
-
     if (min > max) {
+        // Trick to swap 2 values without
+        // using an intermediate variable.
         min = min ^ max ^ (max = min);
     }
     return Math.floor(Math.random() * (max - min) + min);
-
-    // if (min < max) {
-    //     while (min >= result) {
-    //         result = Math.floor(Math.random() * (max - min) + min);
-    //     }
-    // } else {
-    //     while (max >= result) {
-    //         result = Math.floor(Math.random() * (min + max) - max);
-    //     }
-    // }
 }
 
-export function convertToHex(number) {
+function getHexAlphabetValue(hex_alphabet) {
+    switch (hex_alphabet) {
+        case "a": return 10;
+        case "b": return 11;
+        case "c": return 12;
+        case "d": return 13;
+        case "e": return 14;
+        case "f": return 15;
+    }
+}
+
+/**
+ * Util to convert a hexadecimal number
+ * to the decimal numbering system.
+ * @param {String} hex Hexadecimal number.
+ */
+export function convertFromHexToDecimal(hex) {
+    const hex_array = hex.split("");
+    const hex_length = hex_array.length;
+    let result = 0;
+
+    for (let i = 0; hex_length > i; i++) {
+        let number;
+        if (/[a-f]/i.test(hex_array[i])) {
+            number = getHexAlphabetValue(hex_array[i]);
+        } else {
+            number = parseInt(hex_array[i]);
+        }
+        result += number * Math.pow(16, hex_length - (i + 1));
+    }
+    return result;
+}
+
+/**
+ * Converts a number to the hexadecimal numbering system.
+ * @param {Number} number Number to convert to hexadecimal.
+ * @returns The hexadecimal representation of the given number.
+ */
+export function convertFromDecimalToHex(number) {
     // Convert from string to number.
     number = Number(number);
     const hexadecimal_alphabet = {
@@ -48,24 +77,28 @@ export function convertToHex(number) {
 
     // Just change the numbers for anything
     // less than 15.
-    if (15 > number) {
-        if (10 < number) {
+    if (15 >= number) {
+        // This prefix eliminates the issue
+        // of hex numbers being combined.
+        // i.e, cc insted of 0c0c.
+        const prefix = "0";
+        if (10 <= number) {
             switch (number) {
                 case 10:
-                    return hexadecimal_alphabet.a;
+                    return prefix + hexadecimal_alphabet.a;
                 case 11:
-                    return hexadecimal_alphabet.b;
+                    return prefix + hexadecimal_alphabet.b;
                 case 12:
-                    return hexadecimal_alphabet.c;
+                    return prefix + hexadecimal_alphabet.c;
                 case 13:
-                    return hexadecimal_alphabet.d;
+                    return prefix + hexadecimal_alphabet.d;
                 case 14:
-                    return hexadecimal_alphabet.e;
+                    return prefix + hexadecimal_alphabet.e;
                 case 15:
-                    return hexadecimal_alphabet.f;
+                    return prefix + hexadecimal_alphabet.f;
             }       
         }
-        return number;
+        return prefix + number;
     } else {
         let is_last_division = false;
         let result = "";
@@ -112,8 +145,7 @@ export function convertToHex(number) {
                 }
             } else {
                 // Add to the result as long as it's
-                // not the last division (setting the)
-                // number to 1.
+                // not the last division check.
                 if (!is_last_division) {
                     result += decimal_point_result;
                 }
@@ -125,6 +157,9 @@ export function convertToHex(number) {
                 number = 1;
             }
         }
+
+        // Reverse the hexadecimal result
+        // for better accuracy.
         return result.reverse();
     }
 }

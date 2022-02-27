@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Mathematically Calculated Randomly Generated IP Addresses.</title>
+        <title>IP api</title>
 
         <link rel="stylesheet" href="CSS/main.css">
         <script src="JS/modifyPrototipes.js"></script>
@@ -12,7 +12,7 @@
     </head>
     <body>
         <h1>IP api</h1>
-        <input type="text" placeholder="Define range using | or - as seperators." value="0.0.0.0-255.255.255.255"data-ip-range-specifier-el>
+        <input type="text" placeholder="Define range using | or - as seperators." value="0.0.0.0-255.255.255.255" data-ip-range-specifier-el>
         <button data-generate-ip-btn-el>Generate IP.</button>
         <pre data-ip-result-el>0.0.0.0</pre>
         <pre data-ip-result-el-ipv6>0:0:0:0:0:0:0:0</pre>
@@ -22,6 +22,8 @@
             <option value="United States">United States</option>
             <option value="United Kingdom">United Kingdom</option>
             <option value="Australia">Australia</option>
+            <option value="Germany">Germany</option>
+            <option value="Italy">Italy</option>
         </select>
         <div>Generate IP for <strong data-country-index>United States</strong></div>
         <button data-generate-ip-country-btn-el>Generate Country IP.</button>
