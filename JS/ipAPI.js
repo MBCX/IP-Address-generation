@@ -58,8 +58,8 @@ export function convertToIPv6(ipv4) {
     let ipv6_result = ipv6_prefix;
 
     // Check if we have to deal with multiple IPv4s.
-    if (Array.isArray(ipv4) || ipv4.includes("|") || ipv4.includes("-")) {
-        ipv4 = splitIPv4RangeToArray(ipv4);
+    if (Array.isArray(ipv4) || !splitIPv4RangeToArray(ipv4)) {
+        // ipv4 = splitIPv4RangeToArray(ipv4);
         const result_ips = new Array();
         const current_hex_ip = new Array();
 
