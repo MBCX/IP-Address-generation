@@ -1,7 +1,9 @@
 <h1> Random IP Address generator </h1>
 
 <p>This is a random IP address generator util/API 
-I've made for fun.</p>
+I've made for fun using the IPAPI api.</p>
+
+<a href="https://ipapi.co/" target="_blank">IPAPI api.</a>
 
 <h2>
     <strong>Features</strong>
