@@ -2,7 +2,7 @@
 
 <div>
     This is a random IP address generator util/API 
-    I've made for fun using the <a href="https://ipapi.co/" target="_blank"> IPapi api. </a>
+    I've made for fun using the <a href="https://ipapi.co/" target="_blank"> IPapi. </a>
 </div>
 
 <h2>
