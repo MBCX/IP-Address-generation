@@ -46,6 +46,9 @@ function splitIPv4RangeToArray(ipv4_range) {
     } else if (ipv4_range.includes("-")) {
         return (ipv4_range = ipv4_range.split("-"));
     }
+
+    // This return means as a cheap
+    // error handling.
     return false;
 }
 
@@ -58,7 +61,8 @@ export function convertToIPv6(ipv4) {
     let ipv6_result = ipv6_prefix;
 
     // Check if we have to deal with multiple IPv4s.
-    if (Array.isArray(ipv4) || !splitIPv4RangeToArray(ipv4)) {
+    if (Array.isArray(ipv4) || ipv4.includes("|") || ipv4.includes("-")) {
+        ipv4 = splitIPv4RangeToArray(ipv4);
         const result_ips = new Array();
         const current_hex_ip = new Array();
 
@@ -125,7 +129,7 @@ export function convertToIPv4(ipv6) {
 
 /**
  * Generates a random IPv4 address.
- * @param {Array | String} ip_range Must have at least 2 IP ranges, using | or - as a seperator.
+ * @param {String} ip_range Must have at least 2 IP ranges, using | or - as a seperator.
  * @param {Boolean} [shuffle] Set to true for increased randomness.
  */
 export function generateRandomIP(ip_range, shuffle = false) {
@@ -232,10 +236,7 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps) {
                 `No IP were found for the country: ${target_country} at ${attemps} attemps.`
             );
         } catch (err) {
-            return (
-                `No IP were found for the country: ${target_country}` &&
-                console.error(err)
-            );
+            return console.error(err);
         }
     }
 
