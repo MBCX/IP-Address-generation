@@ -181,7 +181,7 @@ export function generateRandomIP(ip_range, shuffle = false) {
  * almost always falls in the specified country.
  * @param {String} country
  * @param {Number} max_attemps Maximum retry attemps before failing.
- * @returns A random IPv4 address that's almost always located in the asked country.
+ * @returns A random IPv4 address that's almost always located in the asked country. Returns undefined at error.
  */
 export async function generateRandomIPBasedOnCountry(country, max_attemps) {
     let current_ip = generateRandomIP("0.0.0.0 - 255.255.255.255");
@@ -236,7 +236,7 @@ export async function generateRandomIPBasedOnCountry(country, max_attemps) {
                 `No IP were found for the country: ${target_country} at ${attemps} attemps.`
             );
         } catch (err) {
-            return console.error(err);
+            console.error(err);
         }
     }
 

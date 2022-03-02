@@ -1,20 +1,3 @@
-// export const COUNTRY = {
-//     US: "United States",
-//     GB: "United Kigndom",
-//     NONE: -1,
-// };
-
-// export const STATE = {
-//     US: {
-//         NEW_YORK: "New York",
-//         NEW_JERSEY: "New Jersey",
-//     },
-//     GB: {
-//         ENGLAND: "England",
-//     },
-//     NONE: -1,
-// };
-
 export function randomNumberBetween(min, max) {
     if (min === max || max === min) return min;
     if (min > max) {
@@ -28,16 +11,22 @@ export function randomNumberBetween(min, max) {
 function getHexAlphabetValue(hex_alphabet) {
     switch (hex_alphabet) {
         case "a":
+        case "A":
             return 10;
         case "b":
+        case "B":
             return 11;
         case "c":
+        case "C":
             return 12;
         case "d":
+        case "D":
             return 13;
         case "e":
+        case "E":
             return 14;
         case "f":
+        case "F":
             return 15;
     }
 }
@@ -54,7 +43,7 @@ export function convertFromHexToDecimal(hex) {
 
     for (let i = 0; hex_length > i; i++) {
         let number = 0;
-        if (/[a-f]/i.test(hex_array[i])) {
+        if (/[a-fA-F]/i.test(hex_array[i])) {
             number = getHexAlphabetValue(hex_array[i]);
         } else {
             number = parseInt(hex_array[i]);
@@ -67,18 +56,19 @@ export function convertFromHexToDecimal(hex) {
 /**
  * Converts a number to the hexadecimal numbering system.
  * @param {Number} number Number to convert to hexadecimal.
+ * @param {Boolean} [capitalise] CAPITALISE the hexadecimal letters?
  * @returns The hexadecimal representation of the given number.
  */
-export function convertFromDecimalToHex(number) {
+export function convertFromDecimalToHex(number, capitalise = false) {
     // Convert from string to number.
     number = Number(number);
     const hexadecimal_alphabet = {
-        a: "a",
-        b: "b",
-        c: "c",
-        d: "d",
-        e: "e",
-        f: "f",
+        a: (capitalise) ? "A" : "a",
+        b: (capitalise) ? "B" : "b",
+        c: (capitalise) ? "C" : "c",
+        d: (capitalise) ? "D" : "d",
+        e: (capitalise) ? "E" : "e",
+        f: (capitalise) ? "F" : "f",
     };
 
     if (15 >= number) {

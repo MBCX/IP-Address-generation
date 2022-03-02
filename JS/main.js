@@ -1,5 +1,4 @@
-import { generateRandomIPBasedOnCountry, generateRandomIP, convertToIPv6, convertToIPv4 } from "./ipAPI.js";
-
+import { generateRandomIPBasedOnCountry, generateRandomIP, convertToIPv6 } from "./ipAPI.js";
 document.addEventListener("DOMContentLoaded", function () {
     const btn = document.querySelector("[data-generate-ip-btn-el]");
     const ip_result = document.querySelector("[data-ip-result-el]");
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         ip_result.innerText = ip;
         ip_result_ipv6.innerText = convertToIPv6(ip);
-        console.log(convertToIPv4(ip_result_ipv6.innerText));
     });
 
     region_generate_btn.addEventListener("click", () => {
@@ -34,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
             region_generate_btn.removeAttribute("disabled");
             
             if (undefined == res) {
-                ip_country_result.innerText = `No IPs found for ${region_index.innerText}, try again.`;    
+                ip_country_result.innerText = `No IPs found for ${region_index.innerText}, try again.`;
             } else {
                 ip_country_result.innerText = res;
                 ip_result_ipv6_country.innerText = convertToIPv6(res);
