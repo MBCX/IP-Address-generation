@@ -12,9 +12,12 @@
     </head>
     <body>
         <h1>IP api</h1>
+        
+        <h2> Generate random IPv4 </h2>
         <input type="text" placeholder="Define range using | or - as seperators." value="0.0.0.0-255.255.255.255" data-ip-range-specifier-el>
-        <button data-generate-ip-btn-el>Generate IP.</button>
+        <button data-generate-ip-btn-el>Generate IPv4.</button>
         <pre data-ip-result-el>0.0.0.0</pre>
+        <small>IPv6 equivalent.</small>
         <pre data-ip-result-el-ipv6>0:0:0:0:0:0:0:0</pre>
 
         <label for="country picker">Pick a country</label>
@@ -28,6 +31,15 @@
         <div>Generate IP for <strong data-country-index>United States</strong></div>
         <button data-generate-ip-country-btn-el>Generate Country IP.</button>
         <pre data-ip-country-result>0.0.0.0</pre>
+        <small>IPv6 equivalent.</small>
         <pre data-ip-country-result-ipv6>0:0:0:0:0:0:0:0</pre>
+
+        <h2>Generate random IPv6</h2>
+        <button data-generate-ipv6-btn-el>Generate IPv6.</button>
+        <p>Absolutely random</p>
+        <input type="checkbox" id="full-random-ipv6">
+        <pre data-ipv6-result>0:0:0:0:0:0:0:0</pre>
+        <small>IPv4 equivalent.</small>
+        <pre data-ipv6-ipv4-result>0.0.0.0</pre>
     </body>
 </html>

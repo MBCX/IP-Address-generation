@@ -63,12 +63,12 @@ export function convertFromDecimalToHex(number, capitalise = false) {
     // Convert from string to number.
     number = Number(number);
     const hexadecimal_alphabet = {
-        a: (capitalise) ? "A" : "a",
-        b: (capitalise) ? "B" : "b",
-        c: (capitalise) ? "C" : "c",
-        d: (capitalise) ? "D" : "d",
-        e: (capitalise) ? "E" : "e",
-        f: (capitalise) ? "F" : "f",
+        a: capitalise ? "A" : "a",
+        b: capitalise ? "B" : "b",
+        c: capitalise ? "C" : "c",
+        d: capitalise ? "D" : "d",
+        e: capitalise ? "E" : "e",
+        f: capitalise ? "F" : "f",
     };
 
     if (15 >= number) {
